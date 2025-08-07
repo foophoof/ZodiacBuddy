@@ -53,12 +53,12 @@ public class BonusLightDuty {
         { 1036, new BonusLightDuty(1036, 48) }, // Sastasha
         { 1037, new BonusLightDuty(1037, 48) }, // The Tam-Tara Deepcroft
         { 1038, new BonusLightDuty(1038, 48) }, // Copperbell Mines
-        {  162, new BonusLightDuty( 162, 48) }, // Halatali
+        { 1245, new BonusLightDuty(1245, 48) }, // Halatali
         { 1039, new BonusLightDuty(1039, 48) }, // The Thousand Maws of Toto-Rak
         { 1040, new BonusLightDuty(1040, 48) }, // Haukke Manor
         { 1041, new BonusLightDuty(1041, 48) }, // Brayflox's Longstop
-        {  163, new BonusLightDuty( 163, 48) }, // The Sunken Temple of Qarn
-        {  170, new BonusLightDuty( 170, 48) }, // Cutter's Cry
+        { 1267, new BonusLightDuty(1267, 48) }, // The Sunken Temple of Qarn
+        { 1303, new BonusLightDuty(1303, 48) }, // Cutter's Cry
         { 1042, new BonusLightDuty(1042, 48) }, // Stone Vigil
         {  171, new BonusLightDuty( 171, 48) }, // Dzemael Darkhold
         {  172, new BonusLightDuty( 172, 48) }, // Aurum Vale
