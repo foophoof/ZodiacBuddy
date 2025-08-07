@@ -1,6 +1,7 @@
 ﻿using System;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
+using Dalamud.Game.NativeWrapper;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
@@ -53,7 +54,7 @@ internal class BraveManager : IDisposable {
         if (!BraveRelic.Items.ContainsKey(item.ItemId))
             return;
 
-        var addon = (AtkUnitBase*)Service.GameGui.GetAddonByName("RelicMagicite");
+        var addon = (AtkUnitBase*)Service.GameGui.GetAddonByName("RelicMagicite").Address;
         if (addon == null)
             return;
 

@@ -67,7 +67,7 @@ internal class NovusManager : IDisposable {
         if (!NovusRelic.Items.ContainsKey(item.ItemId))
             return;
 
-        var addon = (AtkUnitBase*)Service.GameGui.GetAddonByName("RelicGlass");
+        var addon = (AtkUnitBase*)Service.GameGui.GetAddonByName("RelicGlass").Address;
         if (addon == null)
             return;
 

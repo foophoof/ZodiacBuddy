@@ -5,7 +5,7 @@ using Dalamud.Game.Text;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Windowing;
 using FFXIVClientStructs.FFXIV.Client.UI;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace ZodiacBuddy;
 

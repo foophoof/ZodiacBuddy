@@ -1,5 +1,5 @@
 ﻿using FFXIVClientStructs.FFXIV.Client.Game;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using ZodiacBuddy.InformationWindow;
 
 namespace ZodiacBuddy.Stages.Brave;

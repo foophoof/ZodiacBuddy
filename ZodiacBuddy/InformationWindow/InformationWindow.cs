@@ -4,7 +4,7 @@ using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using ZodiacBuddy.BonusLight;
 
 namespace ZodiacBuddy.InformationWindow;

@@ -8,7 +8,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
 using ZodiacBuddy.Stages.Atma.Data;
 using RelicNote = FFXIVClientStructs.FFXIV.Client.Game.UI.RelicNote;
@@ -91,7 +91,7 @@ internal class AtmaManager : IDisposable {
     private unsafe void ReceiveEventDetour(AddonEvent type, AddonArgs args) {
         try {
             if (args is AddonReceiveEventArgs receiveEventArgs && (AtkEventType)receiveEventArgs.AtkEventType is AtkEventType.ButtonClick) {
-                this.ReceiveEvent((AddonRelicNoteBook*)receiveEventArgs.Addon, (AtkEvent*)receiveEventArgs.AtkEvent);
+                this.ReceiveEvent((AddonRelicNoteBook*)receiveEventArgs.Addon.Address, (AtkEvent*)receiveEventArgs.AtkEvent);
             }
         }
         catch (Exception ex) {
