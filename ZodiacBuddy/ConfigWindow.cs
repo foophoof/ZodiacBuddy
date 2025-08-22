@@ -227,7 +227,9 @@ internal class ConfigWindow : Window {
     }
     
     private void Debug() {
-        if (ImGui.Button("Check duties territory"))
+        if (ImGui.Button("Check Light Bonus territory"))
             DebugTools.CheckBonusLightDutyTerritories();
+        if (ImGui.Button("Check Brave books territory"))
+            DebugTools.CheckBraveDutyTerritory();
     }
 }
