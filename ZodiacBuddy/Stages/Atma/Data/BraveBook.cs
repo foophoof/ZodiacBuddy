@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Lumina.Excel.Sheets;
 
@@ -49,6 +49,13 @@ internal struct BraveBook {
     /// <returns>Brave book data.</returns>
     public static BraveBook GetValue(uint bookId)
         => Dataset[bookId];
+    
+    /// <summary>
+    /// Gets all the available Trial of the Braves books.
+    /// </summary>
+    /// <returns>Brave book array.</returns>
+    public static BraveBook[] GetAllValues()
+        => Dataset.Values.ToArray();
 
     /// <summary>
     /// Populate all the available data about the Trial of the Braves.
@@ -287,7 +294,7 @@ internal struct BraveBook {
             457 => new MapLinkPayload( 362, 146, 10.6f,  6.5f), // gobmachine G-VI         // Brayflox's Longstop (Hard)
             458 => new MapLinkPayload(1039,   9, 15.6f, 8.30f), // Graffias                // The Thousand Maws of Toto-Rak
             459 => new MapLinkPayload( 167,  85, 11.4f, 11.2f), // Anantaboga              // Amdapor Keep
-            460 => new MapLinkPayload( 170,  97,  7.7f,  7.2f), // chimera                 // Cutter's Cry
+            460 => new MapLinkPayload(1303,  97,  7.7f,  7.2f), // chimera                 // Cutter's Cry
             461 => new MapLinkPayload( 160, 134, 11.3f, 11.3f), // siren                   // Pharos Sirius
             462 => new MapLinkPayload(1036,  31,  4.9f, 17.7f), // Denn the Orcatoothed    // Sastasha
             463 => new MapLinkPayload( 172,  38,  3.1f,  8.7f), // Miser's Mistress        // Aurum Vale
