@@ -108,14 +108,21 @@ public abstract class InformationWindow {
             ImGui.TextColored(ImGuiColors.DalamudYellow, FontAwesomeIcon.Lightbulb.ToIconString());
             ImGui.PopFont();
 
-            var timeOfDay = DateTime.Now.TimeOfDay;
-            var startEvenHour = timeOfDay.Hours % 2 == 0
-                ? TimeSpan.FromHours(timeOfDay.Hours)
-                : TimeSpan.FromHours(timeOfDay.Hours - 1);
-            var startWindowDate = startEvenHour.ToString(@"hh\:mm");
-            var endWindowDate = startEvenHour.Add(TimeSpan.FromHours(2)).ToString(@"hh\:mm");
-            ImGui.SameLine();
-            ImGui.Text($"{startWindowDate} - {endWindowDate}");
+            var bonusLightWindow = Util.CurrentBonusLightWindow();
+            if (bonusLightWindow.HasValue) {
+                var (startWindow, endWindow) = bonusLightWindow.Value;
+            
+                var startWindowServerTime = startWindow.ToUniversalTime().ToString(@"HH\:mm");
+                var endWindowServerTime = endWindow.ToUniversalTime().ToString(@"HH\:mm");
+                var startWindowLocal = startWindow.ToLocalTime().ToString(@"HH\:mm");
+                var endWindowLocal = endWindow.ToLocalTime().ToString(@"HH\:mm");
+        
+                ImGui.SameLine();
+                ImGui.Text($"Current bonus light window: {startWindowLocal} - {endWindowLocal} ({startWindowServerTime} - {endWindowServerTime} Server Time)");
+            } else {
+                ImGui.SameLine();
+                ImGui.Text($"Bonus light window could not be found, this is a bug.");
+            }
 
             foreach (var territoryId in BonusConfiguration.ActiveBonus) {
                 var dutyName = BonusLightDuty.GetValue(territoryId).DutyName
