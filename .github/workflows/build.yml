@@ -16,7 +16,7 @@ jobs:
           - https://goatcorp.github.io/dalamud-distrib/stg/latest.zip
           - https://goatcorp.github.io/dalamud-distrib/latest.zip
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
       - name: Setup .NET
