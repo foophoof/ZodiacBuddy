@@ -231,5 +231,19 @@ internal class ConfigWindow : Window {
             DebugTools.CheckBonusLightDutyTerritories();
         if (ImGui.Button("Check Brave books territory"))
             DebugTools.CheckBraveDutyTerritory();
+        
+        var bonusLightWindow = Util.CurrentBonusLightWindow();
+        if (bonusLightWindow.HasValue) {
+            var (startWindow, endWindow) = bonusLightWindow.Value;
+            
+            var startWindowServerTime = startWindow.ToString(@"HH\:mm");
+            var endWindowServerTime = endWindow.ToString(@"HH\:mm");
+            var startWindowLocal = startWindow.ToLocalTime().ToString(@"HH\:mm");
+            var endWindowLocal = endWindow.ToLocalTime().ToString(@"HH\:mm");
+        
+            ImGui.Text($"Current bonus light window: {startWindowLocal} - {endWindowLocal} ({startWindowServerTime} - {endWindowServerTime} Server Time)");
+        } else {
+            ImGui.Text($"No bonus light window found, check logs");
+        }
     }
 }
