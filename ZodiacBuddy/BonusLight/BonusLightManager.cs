@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -118,7 +119,7 @@ public class BonusLightManager : IDisposable {
         var content = JsonConvert.SerializeObject(report);
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseUri}/reports/");
-        request.Headers.Add("x-access-token", this.GenerateJWT());
+        request.Headers.Add("x-access-token", this.GenerateJwt());
         request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 
         this.Send(request, null);
@@ -232,9 +233,17 @@ public class BonusLightManager : IDisposable {
         });
     }
 
-    private string GenerateJWT() {
-        var payload = new Dictionary<string, object> {
-            { "sub", Service.ClientState.LocalContentId },
+    private string GenerateJwt()
+    {
+        // Create a SHA-256 hash of the Content ID
+        var cid = Service.ClientState.LocalContentId.ToString();
+        var bytes = Encoding.UTF8.GetBytes(cid);
+        var hash = SHA256.HashData(bytes);
+        var sub = Convert.ToHexString(hash);
+
+        var payload = new Dictionary<string, object>
+        {
+            { "sub", sub },
             { "aud", "ZodiacBuddy" },
             { "iss", "ZodiacBuddyDB" },
             { "iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds() },
