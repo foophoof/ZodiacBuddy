@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using Dalamud.Bindings.ImGui;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.Text.SeStringHandling;
@@ -8,59 +7,71 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
+using System;
+using System.Linq;
 using ZodiacBuddy.Stages.Atma.Data;
 using RelicNote = FFXIVClientStructs.FFXIV.Client.Game.UI.RelicNote;
 
 namespace ZodiacBuddy.Stages.Atma;
 
 /// <summary>
-/// Your buddy for the Atma enhancement stage.
+///     Your buddy for the Atma enhancement stage.
 /// </summary>
-internal class AtmaManager : IDisposable {
+internal class AtmaManager : IDisposable
+{
     /// <summary>
-    /// Initializes a new instance of the <see cref="AtmaManager"/> class.
+    ///     Initializes a new instance of the <see cref="AtmaManager" /> class.
     /// </summary>
-    public AtmaManager() {
+    public AtmaManager()
+    {
         Service.AddonLifecycle.RegisterListener(AddonEvent.PostReceiveEvent, "RelicNoteBook", ReceiveEventDetour);
     }
 
-    /// <inheritdoc/>
-    public void Dispose() {
+    /// <inheritdoc />
+    public void Dispose()
+    {
         Service.AddonLifecycle.UnregisterListener(ReceiveEventDetour);
     }
 
-    private static uint GetNearestAetheryte(MapLinkPayload mapLink) {
+    private static uint GetNearestAetheryte(MapLinkPayload mapLink)
+    {
         var closestAetheryteId = 0u;
         var closestDistance = double.MaxValue;
 
-        static float ConvertRawPositionToMapCoordinate(int pos, float scale) {
+        static float ConvertRawPositionToMapCoordinate(int pos, float scale)
+        {
             var c = scale / 100.0f;
             var scaledPos = pos * c / 1000.0f;
 
-            return (41.0f / c * ((scaledPos + 1024.0f) / 2048.0f)) + 1.0f;
+            return 41.0f / c * ((scaledPos + 1024.0f) / 2048.0f) + 1.0f;
         }
 
         var aetherytes = Service.DataManager.GetExcelSheet<Aetheryte>();
         var mapMarkers = Service.DataManager.GetSubrowExcelSheet<MapMarker>();
 
-        foreach (var aetheryte in aetherytes) {
+        foreach (var aetheryte in aetherytes)
+        {
             if (!aetheryte.IsAetheryte)
+            {
                 continue;
+            }
 
             if (aetheryte.Territory.Value.RowId != mapLink.TerritoryType.RowId)
+            {
                 continue;
+            }
 
             var map = aetheryte.Map.Value;
             var scale = map.SizeFactor;
             var name = map.PlaceName.Value.Name.ExtractText();
 
             var mapMarker = mapMarkers
-	            .SelectMany(markers => markers)
-	            .FirstOrDefault(m => m.DataType == 3 && m.DataKey.RowId == aetheryte.RowId);
-            
-            if (mapMarker.RowId is 0) {
+                .SelectMany(markers => markers)
+                .FirstOrDefault(m => m.DataType == 3 && m.DataKey.RowId == aetheryte.RowId);
+
+            if (mapMarker.RowId is 0)
+            {
                 Service.PluginLog.Debug($"Could not find aetheryte: {name}");
                 return 0;
             }
@@ -81,34 +92,50 @@ internal class AtmaManager : IDisposable {
         return closestAetheryteId;
     }
 
-    private unsafe void Teleport(uint aetheryteId) {
-        if (Service.ClientState.LocalPlayer == null) return;
-        if (Service.Configuration.DisableTeleport) return;
+    private unsafe void Teleport(uint aetheryteId)
+    {
+        if (Service.ClientState.LocalPlayer == null)
+        {
+            return;
+        }
+
+        if (Service.Configuration.DisableTeleport)
+        {
+            return;
+        }
 
         Telepo.Instance()->Teleport(aetheryteId, 0);
     }
 
-    private unsafe void ReceiveEventDetour(AddonEvent type, AddonArgs args) {
-        try {
-            if (args is AddonReceiveEventArgs receiveEventArgs && (AtkEventType)receiveEventArgs.AtkEventType is AtkEventType.ButtonClick) {
-                this.ReceiveEvent((AddonRelicNoteBook*)receiveEventArgs.Addon.Address, (AtkEvent*)receiveEventArgs.AtkEvent);
+    private unsafe void ReceiveEventDetour(AddonEvent type, AddonArgs args)
+    {
+        try
+        {
+            if (args is AddonReceiveEventArgs receiveEventArgs && (AtkEventType)receiveEventArgs.AtkEventType is AtkEventType.ButtonClick)
+            {
+                ReceiveEvent((AddonRelicNoteBook*)receiveEventArgs.Addon.Address, (AtkEvent*)receiveEventArgs.AtkEvent);
             }
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             Service.PluginLog.Error(ex, "Exception during hook: AddonRelicNotebook.ReceiveEvent:Click");
         }
     }
 
-    private unsafe void ReceiveEvent(AddonRelicNoteBook* addon, AtkEvent* eventData) {
+    private unsafe void ReceiveEvent(AddonRelicNoteBook* addon, AtkEvent* eventData)
+    {
         var relicNote = RelicNote.Instance();
         if (relicNote == null)
+        {
             return;
+        }
 
         var bookId = relicNote->RelicNoteId;
         var index = addon->CategoryList->SelectedItemIndex;
         var targetComponent = eventData->Target;
 
-        var selectedTarget = targetComponent switch {
+        var selectedTarget = targetComponent switch
+        {
             // Enemies
             _ when index == 0 && IsOwnerNode(targetComponent, addon->Enemy0.CheckBox) => BraveBook.GetValue(bookId).Enemies[0],
             _ when index == 0 && IsOwnerNode(targetComponent, addon->Enemy1.CheckBox) => BraveBook.GetValue(bookId).Enemies[1],
@@ -140,13 +167,16 @@ internal class AtmaManager : IDisposable {
             : selectedTarget.ZoneName;
 
         // Service.PluginLog.Debug($"Target selected: {selectedTarget.Name} in {zoneName}.");
-        if (Service.Configuration.BraveEchoTarget) {
-	        var sb = new SeStringBuilder()
-		        .AddText("Target selected: ")
-		        .AddUiForeground(selectedTarget.Name, 62);
+        if (Service.Configuration.BraveEchoTarget)
+        {
+            var sb = new SeStringBuilder()
+                .AddText("Target selected: ")
+                .AddUiForeground(selectedTarget.Name, 62);
 
             if (index == 3) // leves
+            {
                 sb.AddText($" from {selectedTarget.Issuer}");
+            }
 
             sb.AddText($" in {zoneName}.");
 
@@ -160,22 +190,29 @@ internal class AtmaManager : IDisposable {
         }
 
         var aetheryteId = GetNearestAetheryte(selectedTarget.Position);
-        if (aetheryteId == 0) {
-            if (index == 1) {
+        if (aetheryteId == 0)
+        {
+            if (index == 1)
+            {
                 // Dungeons
                 AgentContentsFinder.Instance()->OpenRegularDuty(selectedTarget.ContentsFinderConditionId);
             }
-            else {
+            else
+            {
                 Service.PluginLog.Warning($"Could not find an aetheryte for {zoneName}");
             }
         }
-        else {
+        else
+        {
             Service.GameGui.OpenMapWithMapLink(selectedTarget.Position);
-            this.Teleport(aetheryteId);
+            Teleport(aetheryteId);
         }
+
         return;
 
         static bool IsOwnerNode(AtkEventTarget* target, AtkComponentCheckBox* checkbox)
-            => target == checkbox->AtkComponentButton.OwnerNode;
+        {
+            return target == checkbox->AtkComponentButton.OwnerNode;
+        }
     }
 }

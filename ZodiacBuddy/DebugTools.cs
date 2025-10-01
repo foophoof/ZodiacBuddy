@@ -1,28 +1,27 @@
-﻿using System.Linq;
-using Dalamud.Game.Text;
+﻿using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
-using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using System.Linq;
 using ZodiacBuddy.BonusLight;
 using ZodiacBuddy.Stages.Atma.Data;
 
 namespace ZodiacBuddy;
 
 /// <summary>
-/// Static class used to store debug and check functions for dev.
+///     Static class used to store debug and check functions for dev.
 /// </summary>
 public static class DebugTools
 {
     /// <summary>
-    /// Check that all the territory id in the bonus light duty have a name in Lumina.
-    /// <p/>
-    /// If a territory doesn't have a name, it's id have probably changed and will need to be updated in the code.
+    ///     Check that all the territory id in the bonus light duty have a name in Lumina.
+    ///     <p />
+    ///     If a territory doesn't have a name, it's id have probably changed and will need to be updated in the code.
     /// </summary>
     public static void CheckBonusLightDutyTerritories()
     {
         var dutyWithoutName = BonusLightDuty.GetDataset()
             .Where(it => string.IsNullOrWhiteSpace(it.Value.DutyName))
             .ToList();
-        SeStringBuilder sb = new SeStringBuilder()
+        var sb = new SeStringBuilder()
             .AddUiForeground("[ZodiacBuddy] ", 45);
         if (dutyWithoutName.Count > 0)
         {
@@ -34,17 +33,13 @@ public static class DebugTools
             sb.AddText("Nothing to report");
         }
 
-        Service.ChatGui.Print(new XivChatEntry
-        {
-            Type = XivChatType.Echo,
-            Message = sb.BuiltString,
-        });
+        Service.ChatGui.Print(new XivChatEntry {Type = XivChatType.Echo, Message = sb.BuiltString});
     }
-    
+
     /// <summary>
-    /// Check that all the territory id in the brave books have a name in Lumina.
-    /// <p/>
-    /// If a territory doesn't have a name, it's id have probably changed and will need to be updated in the code.
+    ///     Check that all the territory id in the brave books have a name in Lumina.
+    ///     <p />
+    ///     If a territory doesn't have a name, it's id have probably changed and will need to be updated in the code.
     /// </summary>
     public static void CheckBraveDutyTerritory()
     {
@@ -52,7 +47,7 @@ public static class DebugTools
             .SelectMany(it => it.Dungeons.Select(dg => dg.Position))
             .Where(it => string.IsNullOrWhiteSpace(it.PlaceName))
             .ToList();
-        SeStringBuilder sb = new SeStringBuilder()
+        var sb = new SeStringBuilder()
             .AddUiForeground("[ZodiacBuddy] ", 45);
         if (braveTerritories.Count != 0)
         {
@@ -64,10 +59,6 @@ public static class DebugTools
             sb.AddText("Nothing to report");
         }
 
-        Service.ChatGui.Print(new XivChatEntry
-        {
-            Type = XivChatType.Echo,
-            Message = sb.BuiltString,
-        });
+        Service.ChatGui.Print(new XivChatEntry {Type = XivChatType.Echo, Message = sb.BuiltString});
     }
 }

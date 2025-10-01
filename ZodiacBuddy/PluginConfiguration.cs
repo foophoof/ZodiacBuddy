@@ -8,8 +8,10 @@ using ZodiacBuddy.Stages.Novus;
 
 namespace ZodiacBuddy;
 
-public class PluginConfiguration : IPluginConfiguration {
-    public int Version { get; set; } = 1;
+public class PluginConfiguration : IPluginConfiguration
+{
+
+    public bool DisableTeleport = false;
 
     [JsonProperty("BraveEchoChannel")] public XivChatType ChatType { get; set; } = XivChatType.Echo;
 
@@ -24,8 +26,10 @@ public class PluginConfiguration : IPluginConfiguration {
     public BraveConfiguration Brave { get; } = new();
 
     public InformationWindowConfiguration InformationWindow { get; } = new();
+    public int Version { get; set; } = 1;
 
-    public bool DisableTeleport = false;
-
-    public void Save() => Service.Interface.SavePluginConfig(this);
+    public void Save()
+    {
+        Service.Interface.SavePluginConfig(this);
+    }
 }

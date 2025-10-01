@@ -1,19 +1,23 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
-using Dalamud.Bindings.ImGui;
+﻿using Dalamud.Bindings.ImGui;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using ZodiacBuddy.InformationWindow;
 
 namespace ZodiacBuddy.Stages.Brave;
 
 /// <summary>
-/// Brave information window.
+///     Brave information window.
 /// </summary>
-public class BraveWindow() : InformationWindow.InformationWindow("Zodiac Brave Information") {
+public class BraveWindow() : InformationWindow.InformationWindow("Zodiac Brave Information")
+{
     private static InformationWindowConfiguration InfoWindowConfiguration => Service.Configuration.InformationWindow;
 
-    /// <inheritdoc/>
-    protected override void DisplayRelicInfo(InventoryItem item) {
+    /// <inheritdoc />
+    protected override void DisplayRelicInfo(InventoryItem item)
+    {
         if (!BraveRelic.Items.TryGetValue(item.ItemId, out var name))
+        {
             return;
+        }
 
         name = name
             .Replace("Œ", "Oe")
@@ -22,16 +26,20 @@ public class BraveWindow() : InformationWindow.InformationWindow("Zodiac Brave I
 
         ImGui.PushStyleColor(ImGuiCol.PlotHistogram, InfoWindowConfiguration.ProgressColor);
 
-        var mahatmaValue = (item.SpiritbondOrCollectability / 500) + 1;
+        var mahatmaValue = item.SpiritbondOrCollectability / 500 + 1;
         if (item.SpiritbondOrCollectability == 0)
+        {
             mahatmaValue = 0;
+        }
 
         var mahatmaProgress = mahatmaValue / 12f;
         ImGui.ProgressBar(mahatmaProgress, DetermineProgressSize(name), $"{mahatmaValue}/12");
 
         var value = item.SpiritbondOrCollectability % 500;
         if (value == 1)
+        {
             value -= 1;
+        }
 
         var progress = value / 80f;
         ImGui.ProgressBar(progress, DetermineProgressSize(name), $"{value / 2}/40");

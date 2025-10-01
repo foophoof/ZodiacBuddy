@@ -1,12 +1,12 @@
 <Project Sdk="Dalamud.NET.Sdk/13.1.0">
-  <PropertyGroup>
-    <Authors>daemitus, MidoriKami, foophoof</Authors>
-    <Description>Complete your Zodiac relic with style.</Description>
-    <PackageProjectUrl>https://github.com/foophoof/ZodiacBuddy</PackageProjectUrl>
-    <Version>1.13.0.2</Version>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Authors>daemitus, MidoriKami, foophoof</Authors>
+        <Description>Complete your Zodiac relic with style.</Description>
+        <PackageProjectUrl>https://github.com/foophoof/ZodiacBuddy</PackageProjectUrl>
+        <Version>1.13.0.2</Version>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="LitJWT" Version="2.0.2" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="LitJWT" Version="2.0.2"/>
+    </ItemGroup>
 </Project>

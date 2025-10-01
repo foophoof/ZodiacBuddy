@@ -1,19 +1,23 @@
-using FFXIVClientStructs.FFXIV.Client.Game;
 using Dalamud.Bindings.ImGui;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using ZodiacBuddy.InformationWindow;
 
 namespace ZodiacBuddy.Stages.Novus;
 
 /// <summary>
-/// Novus information window.
+///     Novus information window.
 /// </summary>
-public class NovusWindow() : InformationWindow.InformationWindow("Novus Zodiac Information") {
+public class NovusWindow() : InformationWindow.InformationWindow("Novus Zodiac Information")
+{
     private static InformationWindowConfiguration InfoWindowConfiguration => Service.Configuration.InformationWindow;
 
-    /// <inheritdoc/>
-    protected override void DisplayRelicInfo(InventoryItem item) {
+    /// <inheritdoc />
+    protected override void DisplayRelicInfo(InventoryItem item)
+    {
         if (!NovusRelic.Items.TryGetValue(item.ItemId, out var name))
+        {
             return;
+        }
 
         name = name
             .Replace("Œ", "Oe")

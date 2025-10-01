@@ -1,16 +1,16 @@
-﻿using System;
-using Dalamud.Game.Addon.Lifecycle;
+﻿using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
-using Dalamud.Game.NativeWrapper;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using System;
 
 namespace ZodiacBuddy.Stages.Brave;
 
 /// <summary>
-/// Your buddy for the Zodiac Brave stage.
+///     Your buddy for the Zodiac Brave stage.
 /// </summary>
-internal class BraveManager : IDisposable {
+internal class BraveManager : IDisposable
+{
     // private static readonly BonusLightLevel[] BonusLightValues = {
     //     #pragma warning disable format,SA1008,SA1025
     //     new(  4, 4660), // Feeble
@@ -25,38 +25,47 @@ internal class BraveManager : IDisposable {
     private readonly BraveWindow window;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BraveManager"/> class.
+    ///     Initializes a new instance of the <see cref="BraveManager" /> class.
     /// </summary>
-    public BraveManager() {
-        this.window = new BraveWindow();
-        
-        Service.Framework.Update += this.OnUpdate;
-        Service.Interface.UiBuilder.Draw += this.window.Draw;
-        
+    public BraveManager()
+    {
+        window = new BraveWindow();
+
+        Service.Framework.Update += OnUpdate;
+        Service.Interface.UiBuilder.Draw += window.Draw;
+
         Service.AddonLifecycle.RegisterListener(AddonEvent.PostSetup, "RelicMagicite", AddonRelicMagiciteOnSetupDetour);
     }
 
     private static BraveConfiguration Configuration => Service.Configuration.Brave;
 
-    /// <inheritdoc/>
-    public void Dispose() {
-        Service.Framework.Update -= this.OnUpdate;
-        Service.Interface.UiBuilder.Draw -= this.window.Draw;
-        
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Service.Framework.Update -= OnUpdate;
+        Service.Interface.UiBuilder.Draw -= window.Draw;
+
         Service.AddonLifecycle.UnregisterListener(AddonRelicMagiciteOnSetupDetour);
     }
 
     private void AddonRelicMagiciteOnSetupDetour(AddonEvent type, AddonArgs args)
-        => this.UpdateRelicMagiciteAddon(0);
+    {
+        UpdateRelicMagiciteAddon(0);
+    }
 
-    private unsafe void UpdateRelicMagiciteAddon(int slot) {
+    private unsafe void UpdateRelicMagiciteAddon(int slot)
+    {
         var item = Util.GetEquippedItem(slot);
         if (!BraveRelic.Items.ContainsKey(item.ItemId))
+        {
             return;
+        }
 
         var addon = (AtkUnitBase*)Service.GameGui.GetAddonByName("RelicMagicite").Address;
         if (addon == null)
+        {
             return;
+        }
 
         // var componentNode = (AtkComponentNode*)addon->UldManager.SearchNodeById(nodeID);
         // if (componentNode == null)
@@ -68,15 +77,20 @@ internal class BraveManager : IDisposable {
 
         var lightText = (AtkTextNode*)addon->UldManager.SearchNodeById(9);
         if (lightText == null)
+        {
             return;
+        }
 
-        if (Configuration.ShowNumbersInRelicMagicite) {
+        if (Configuration.ShowNumbersInRelicMagicite)
+        {
             var value = item.SpiritbondOrCollectability % 500;
             lightText->SetText($"{lightText->NodeText}\n{value / 2}/40");
         }
 
         if (!Configuration.DontPlayRelicMagiciteAnimation)
+        {
             return;
+        }
 
         // var analyzeText = (AtkTextNode*)componentNode->Component->UldManager.SearchNodeById(8);
         // if (analyzeText == null)
@@ -84,15 +98,20 @@ internal class BraveManager : IDisposable {
 
         var analyzeText = (AtkTextNode*)addon->UldManager.SearchNodeById(8);
         if (analyzeText == null)
+        {
             return;
+        }
 
         analyzeText->SetText(lightText->NodeText.ToString());
     }
 
-    private void OnUpdate(IFramework framework) {
-        try {
-            if (!Configuration.DisplayRelicInfo) {
-                this.window.ShowWindow = false;
+    private void OnUpdate(IFramework framework)
+    {
+        try
+        {
+            if (!Configuration.DisplayRelicInfo)
+            {
+                window.ShowWindow = false;
                 return;
             }
 
@@ -103,12 +122,13 @@ internal class BraveManager : IDisposable {
                 BraveRelic.Items.ContainsKey(mainhand.ItemId) ||
                 BraveRelic.Items.ContainsKey(offhand.ItemId);
 
-            this.window.ShowWindow = shouldShowWindow;
-            this.window.MainHandItem = mainhand;
-            this.window.OffhandItem = offhand;
+            window.ShowWindow = shouldShowWindow;
+            window.MainHandItem = mainhand;
+            window.OffhandItem = offhand;
         }
-        catch (Exception ex) {
-            Service.PluginLog.Error(ex, $"Unhandled error during {nameof(BraveManager)}.{nameof(this.OnUpdate)}");
+        catch (Exception ex)
+        {
+            Service.PluginLog.Error(ex, $"Unhandled error during {nameof(BraveManager)}.{nameof(OnUpdate)}");
         }
     }
 }
