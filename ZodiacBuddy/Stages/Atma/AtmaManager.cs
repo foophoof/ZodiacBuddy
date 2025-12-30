@@ -94,7 +94,7 @@ internal class AtmaManager : IDisposable
 
     private unsafe void Teleport(uint aetheryteId)
     {
-        if (Service.ClientState.LocalPlayer == null)
+        if (!Service.ClientState.IsLoggedIn)
         {
             return;
         }
