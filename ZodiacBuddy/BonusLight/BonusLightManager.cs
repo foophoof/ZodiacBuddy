@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -258,9 +259,13 @@ public class BonusLightManager : IDisposable
 
     private string GenerateJWT()
     {
+        var bytes = BitConverter.GetBytes(Service.PlayerState.ContentId);
+        var hash = SHA256.HashData(bytes);
+        var sub = Convert.ToHexString(hash);
+
         var payload = new Dictionary<string, object>
         {
-            {"sub", Service.ClientState.LocalContentId},
+            {"sub", sub},
             {"aud", "ZodiacBuddy"},
             {"iss", "ZodiacBuddyDB"},
             {"iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds()},
