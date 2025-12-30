@@ -116,20 +116,15 @@ public class BonusLightManager : IDisposable
     /// <param name="detectionTime">DateTime of the detection.</param>
     private void SendReport(uint territoryId, DateTime detectionTime)
     {
-        if (Service.ClientState.LocalPlayer == null)
+        var datacenter = Service.PlayerState.HomeWorld.ValueNullable?.DataCenter.RowId;
+        var world = Service.PlayerState.HomeWorld.ValueNullable?.RowId;
+
+        if (!datacenter.HasValue || !world.HasValue)
         {
             return;
         }
 
-        if (Service.ClientState.LocalPlayer.HomeWorld is {RowId: 0})
-        {
-            return;
-        }
-
-        var datacenter = Service.ClientState.LocalPlayer.HomeWorld.Value.DataCenter.RowId;
-        var world = Service.ClientState.LocalPlayer.HomeWorld.RowId;
-
-        var report = new Report(datacenter, world, territoryId, detectionTime);
+        var report = new Report(datacenter.Value, world.Value, territoryId, detectionTime);
         var content = JsonConvert.SerializeObject(report);
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseUri}/reports/");
@@ -181,22 +176,9 @@ public class BonusLightManager : IDisposable
     /// </summary>
     private void RetrieveLastReport()
     {
-        Service.Framework.RunOnFrameworkThread(() =>
-        {
-            if (Service.ClientState.LocalPlayer == null)
-            {
-                return;
-            }
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{BaseUri}/reports/active");
 
-            if (Service.ClientState.LocalPlayer.HomeWorld.RowId is 0)
-            {
-                return;
-            }
-
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{BaseUri}/reports/active");
-
-            Send(request, OnLastReportResponse);
-        });
+        Send(request, OnLastReportResponse);
     }
 
     private void OnLogin()
