@@ -1,5 +1,8 @@
-﻿using Dalamud.Game.Text.SeStringHandling.Payloads;
+﻿using Dalamud.Game.ClientState.Objects.Enums;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
+using Dalamud.Utility;
 using Lumina.Excel.Sheets;
+using Lumina.Text.ReadOnly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,7 +85,7 @@ internal struct BraveBook
                 var eventItem = bookRow.EventItem.Value;
 
                 // var bookId = bookRow.RowId;
-                var bookName = eventItem.Name.ToString();
+                var bookName = ItemUtil.GetItemName(eventItem.RowId, false).ToString();
 
                 var enemyCount = bookRow.MonsterNoteTargetCommon.Count;
                 var dungeonCount = bookRow.MonsterNoteTargetNM.Count;
@@ -110,7 +113,7 @@ internal struct BraveBook
 
                     var locationName = mntc.PlaceNameLocation[0].Value.Name.ToString();
 
-                    var name = mntc.BNpcName.Value.Singular.ToString();
+                    var name = Service.SeStringEvaluator.EvaluateObjStr(ObjectKind.BattleNpc, mntc.BNpcName.RowId);
 
                     var position = GetMonsterPosition(mntc.RowId);
 
@@ -136,7 +139,7 @@ internal struct BraveBook
 
                     var locationName = mntc.PlaceNameLocation[0].Value.Name.ToString();
 
-                    var name = mntc.BNpcName.Value.Singular;
+                    var name = Service.SeStringEvaluator.EvaluateObjStr(ObjectKind.BattleNpc, mntc.BNpcName.RowId);
 
                     var position = GetMonsterPosition(mntc.RowId);
 
@@ -145,7 +148,7 @@ internal struct BraveBook
                     // Service.PluginLog.Debug($"Loaded dungeon {mntcID}: {name}");
                     braveBook.Dungeons[i] = new BraveTarget
                     {
-                        Name = name.ToString(),
+                        Name = name,
                         ZoneName = zoneName,
                         ZoneId = zoneId,
                         LocationName = locationName,
@@ -164,12 +167,12 @@ internal struct BraveBook
                     var zoneName = position.TerritoryType.Value.PlaceName.Value.Name.ToString();
                     var zoneId = position.TerritoryType.RowId;
 
-                    var name = fate.Name;
+                    var name = Service.SeStringEvaluator.Evaluate(fate.Name).ToString();
 
                     // Service.PluginLog.Debug($"Loaded fate {fateID}: {name}");
                     braveBook.Fates[i] = new BraveTarget
                     {
-                        Name = name.ToString(),
+                        Name = name,
                         ZoneName = zoneName,
                         ZoneId = zoneId,
                         LocationName = string.Empty,
@@ -398,42 +401,19 @@ internal struct BraveBook
     {
         var (gcId, issuerName) = leveId switch
         {
-            643 => (0, "Rurubana"),
-            644 => (0, "Rurubana"),
-            645 => (0, "Rurubana"),
-            646 => (0, "Rurubana"),
-            647 => (0, "Rurubana"),
-            649 => (0, "Voilinaut"),
-            650 => (0, "Voilinaut"),
-            652 => (0, "Voilinaut"),
-            657 => (0, "K'leytai"),
-            658 => (0, "K'leytai"),
-            659 => (0, "K'leytai"),
-            848 => (1, "Lodile"),
-            849 => (1, "Lodile"),
-            853 => (2, "Lodile"),
-            855 => (2, "Lodile"),
-            859 => (3, "Lodile"),
-            860 => (3, "Lodile"),
-            863 => (1, "Eidhart"),
-            865 => (1, "Eidhart"),
-            868 => (2, "Eidhart"),
-            870 => (2, "Eidhart"),
-            875 => (3, "Eidhart"),
-            873 => (3, "Eidhart"),
+            643 or 644 or 645 or 646 or 647 => (0, Service.SeStringEvaluator.EvaluateObjStr(ObjectKind.EventNpc, 1002398)), // Rurubana
+            649 or 650 or 652 => (0, Service.SeStringEvaluator.EvaluateObjStr(ObjectKind.EventNpc, 1002401)), // Voilinaut
+            657 or 658 or 659 => (0, Service.SeStringEvaluator.EvaluateObjStr(ObjectKind.EventNpc, 1004348)), // K'leytai
+            848 or 849 => (1, Service.SeStringEvaluator.EvaluateObjStr(ObjectKind.EventNpc, 1007069)), // Lodille
+            853 or 855 => (2, Service.SeStringEvaluator.EvaluateObjStr(ObjectKind.EventNpc, 1007069)), // Lodille
+            859 or 860 => (3, Service.SeStringEvaluator.EvaluateObjStr(ObjectKind.EventNpc, 1007069)), // Lodille
+            863 or 865 => (1, Service.SeStringEvaluator.EvaluateObjStr(ObjectKind.EventNpc, 1007070)), // Eidhart
+            868 or 870 => (2, Service.SeStringEvaluator.EvaluateObjStr(ObjectKind.EventNpc, 1007070)), // Eidhart
+            875 or 873 => (3, Service.SeStringEvaluator.EvaluateObjStr(ObjectKind.EventNpc, 1007070)), // Eidhart
             _ => throw new ArgumentException($"Unregistered leve: {leveId}"),
         };
 
-        var gcName =
-            gcId switch
-            {
-                1 => "Maelstrom",
-                2 => "Order of the Twin Adder",
-                3 => "Immortal Flames",
-                _ => string.Empty,
-            };
-
-        if (gcName != string.Empty)
+        if (gcId != 0 && Service.SeStringEvaluator.EvaluateFromAddon(826, [gcId]) is var gcName && !gcName.IsEmpty)
         {
             issuerName += $" ({gcName})";
         }
