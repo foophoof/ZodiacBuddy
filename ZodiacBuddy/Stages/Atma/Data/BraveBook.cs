@@ -82,7 +82,7 @@ internal struct BraveBook
                 var eventItem = bookRow.EventItem.Value;
 
                 // var bookId = bookRow.RowId;
-                var bookName = eventItem.Name.ExtractText();
+                var bookName = eventItem.Name.ToString();
 
                 var enemyCount = bookRow.MonsterNoteTargetCommon.Count;
                 var dungeonCount = bookRow.MonsterNoteTargetNM.Count;
@@ -105,12 +105,12 @@ internal struct BraveBook
                     // var mntcID = mntc.RowId;
 
                     var zoneRow = mntc.PlaceNameZone[0].Value;
-                    var zoneName = zoneRow.Name.ExtractText();
+                    var zoneName = zoneRow.Name.ToString();
                     var zoneId = zoneRow.RowId;
 
-                    var locationName = mntc.PlaceNameLocation[0].Value.Name.ExtractText();
+                    var locationName = mntc.PlaceNameLocation[0].Value.Name.ToString();
 
-                    var name = mntc.BNpcName.Value.Singular.ExtractText();
+                    var name = mntc.BNpcName.Value.Singular.ToString();
 
                     var position = GetMonsterPosition(mntc.RowId);
 
@@ -131,10 +131,10 @@ internal struct BraveBook
                     // var mntcID = mntc.RowId;
 
                     var zoneRow = mntc.PlaceNameZone[0].Value;
-                    var zoneName = zoneRow.Name.ExtractText();
+                    var zoneName = zoneRow.Name.ToString();
                     var zoneId = zoneRow.RowId;
 
-                    var locationName = mntc.PlaceNameLocation[0].Value.Name.ExtractText();
+                    var locationName = mntc.PlaceNameLocation[0].Value.Name.ToString();
 
                     var name = mntc.BNpcName.Value.Singular;
 
@@ -145,7 +145,7 @@ internal struct BraveBook
                     // Service.PluginLog.Debug($"Loaded dungeon {mntcID}: {name}");
                     braveBook.Dungeons[i] = new BraveTarget
                     {
-                        Name = name.ExtractText(),
+                        Name = name.ToString(),
                         ZoneName = zoneName,
                         ZoneId = zoneId,
                         LocationName = locationName,
@@ -161,7 +161,7 @@ internal struct BraveBook
 
                     var position = GetFatePosition(fateId);
 
-                    var zoneName = position.TerritoryType.Value.PlaceName.Value.Name.ExtractText();
+                    var zoneName = position.TerritoryType.Value.PlaceName.Value.Name.ToString();
                     var zoneId = position.TerritoryType.RowId;
 
                     var name = fate.Name;
@@ -169,7 +169,7 @@ internal struct BraveBook
                     // Service.PluginLog.Debug($"Loaded fate {fateID}: {name}");
                     braveBook.Fates[i] = new BraveTarget
                     {
-                        Name = name.ExtractText(),
+                        Name = name.ToString(),
                         ZoneName = zoneName,
                         ZoneId = zoneId,
                         LocationName = string.Empty,
@@ -182,12 +182,12 @@ internal struct BraveBook
                     var leve = bookRow.Leve[i].Value;
                     var leveId = leve.RowId;
                     // var leveType = leve.LeveAssignmentType.Value!;
-                    var leveName = leve.Name.ExtractText();
+                    var leveName = leve.Name.ToString();
 
                     var position = GetLevePosition(leveId);
                     var issuerName = GetLeveIssuer(leveId);
 
-                    var zoneName = position.TerritoryType.Value.PlaceName.Value.Name.ExtractText();
+                    var zoneName = position.TerritoryType.Value.PlaceName.Value.Name.ToString();
                     var zoneId = position.TerritoryType.RowId;
 
                     // Service.PluginLog.Debug($"Loaded leve {leveID}: {name}");

@@ -64,7 +64,7 @@ internal class AtmaManager : IDisposable
 
             var map = aetheryte.Map.Value;
             var scale = map.SizeFactor;
-            var name = map.PlaceName.Value.Name.ExtractText();
+            var name = map.PlaceName.Value.Name.ToString();
 
             var mapMarker = mapMarkers
                 .SelectMany(markers => markers)

@@ -30,6 +30,6 @@ public static class BraveRelic
     {
         return Service.DataManager.Excel.GetSheet<Item>()
             .GetRow(itemId).Name
-            .ExtractText();
+            .ToString();
     }
 }

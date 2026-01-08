@@ -17,7 +17,7 @@ public class BonusLightLevel
         Intensity = intensity;
         Message = Service.DataManager.Excel.GetSheet<LogMessage>()
             .GetRow(rowId)
-            .Text.ExtractText();
+            .Text.ToString();
     }
 
     /// <summary>

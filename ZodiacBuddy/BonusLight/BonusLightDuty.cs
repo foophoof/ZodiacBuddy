@@ -100,7 +100,7 @@ public class BonusLightDuty
 
         DutyName = Service.DataManager.Excel.GetSheet<TerritoryType>()
             .GetRow(territoryId)
-            .ContentFinderCondition.Value.Name.ExtractText();
+            .ContentFinderCondition.Value.Name.ToString();
     }
 
     /// <summary>
