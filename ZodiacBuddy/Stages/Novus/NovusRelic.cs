@@ -1,4 +1,4 @@
-﻿using Lumina.Excel.Sheets;
+﻿using Dalamud.Utility;
 using System.Collections.Generic;
 
 namespace ZodiacBuddy.Stages.Novus;
@@ -27,9 +27,5 @@ public static class NovusRelic
     };
 
     private static string GetItemName(uint itemId)
-    {
-        return Service.DataManager.Excel.GetSheet<Item>()
-            .GetRow(itemId).Name
-            .ToString();
-    }
+        => ItemUtil.GetItemName(itemId, false).ToString();
 }

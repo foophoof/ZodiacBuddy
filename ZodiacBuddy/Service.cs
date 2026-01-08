@@ -20,6 +20,7 @@ public class Service
     [PluginService] public static IPluginLog PluginLog { get; set; }
     [PluginService] public static IAddonLifecycle AddonLifecycle { get; set; }
     [PluginService] public static IPlayerState PlayerState { get; set; }
+    [PluginService] public static ISeStringEvaluator SeStringEvaluator { get; set; }
 
     public static ZodiacBuddyPlugin Plugin { get; set; } = null!;
     public static PluginConfiguration Configuration { get; set; } = null!;
