@@ -357,7 +357,7 @@ internal struct BraveBook
             604 => new MapLinkPayload(148, 4, 11.0f, 18.0f), // In Spite of It All         // Central Shroud
             611 => new MapLinkPayload(152, 5, 27.0f, 21.0f), // The Enmity of My Enemy     // East Shroud
             616 => new MapLinkPayload(152, 5, 32.0f, 14.0f), // Breaking Dawn              // East Shroud
-            620 => new MapLinkPayload(152, 5, 23.0f, 14.0f), // Everything's Better        // East Shroud
+            620 => new MapLinkPayload(152, 5, 23.7f, 14.5f), // Everything's Better        // East Shroud
             628 => new MapLinkPayload(153, 6, 32.0f, 25.0f), // What Gored Before          // South Shroud
             632 => new MapLinkPayload(154, 7, 21.0f, 19.0f), // Rude Awakening             // North Shroud
             633 => new MapLinkPayload(154, 7, 19.0f, 20.0f), // Air Supply                 // North Shroud
