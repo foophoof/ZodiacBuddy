@@ -334,7 +334,7 @@ internal struct BraveBook
         {
             317 => new MapLinkPayload(139, 19, 26.8f, 18.2f), // Surprise                   // Upper La Noscea
             424 => new MapLinkPayload(146, 23, 21.0f, 16.0f), // Heroes of the 2nd          // Southern Thanalan
-            430 => new MapLinkPayload(146, 23, 24.0f, 26.0f), // Return to Cinder           // Southern Thanalan
+            430 => new MapLinkPayload(146, 23, 24.3f, 26.1f), // Return to Cinder           // Southern Thanalan
             475 => new MapLinkPayload(155, 53, 34.0f, 13.0f), // Bellyful                   // Coerthas Central Highlands
             480 => new MapLinkPayload(155, 53, 8.0f, 11.0f), // Giant Seps                 // Coerthas Central Highlands
             486 => new MapLinkPayload(155, 53, 10.0f, 28.0f), // Tower of Power             // Coerthas Central Highlands
