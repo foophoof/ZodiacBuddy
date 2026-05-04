@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
+using Dalamud.Game.DutyState;
 using Dalamud.Game.Gui.Toast;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Plugin.Services;
@@ -193,7 +194,7 @@ internal class NovusManager : IDisposable
         }
     }
 
-    private void OnTerritoryChange(ushort territoryId)
+    private void OnTerritoryChange(uint territoryId)
     {
         // Reset territory info
         dutyBeginning = null;
@@ -207,7 +208,7 @@ internal class NovusManager : IDisposable
         dutyBeginning = DateTime.UtcNow;
     }
 
-    private void OnDutyStart(object? sender, ushort territoryId)
+    private void OnDutyStart(IDutyStateEventArgs args)
     {
         // Prevent report from player reconnecting during duty or joining an ongoing duty
         // Can set dutyBeginning due to player in cinematic
